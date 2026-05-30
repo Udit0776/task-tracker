@@ -209,7 +209,7 @@ const Dashboard = () => {
                 {/* Carousel Header */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">⚡ Priority Queue</span>
+                    <span className="text-[11.5px] font-extrabold text-gray-500 uppercase tracking-widest">⚡ Priority Queue</span>
                     <span className="bg-primary/10 text-primary px-1.5 py-0.5 rounded text-[9px] font-bold">
                       {activePriorityIndex + 1} / {priorityTasks.length}
                     </span>
@@ -238,20 +238,25 @@ const Dashboard = () => {
                   if (!task) return null;
                   
                   const priorityColors = {
-                    HIGH: 'bg-primary',
-                    MEDIUM: 'bg-amber-600',
-                    LOW: 'bg-slate-500'
+                    HIGH: 'bg-red-600',
+                    MEDIUM: 'bg-amber-400',
+                    LOW: 'bg-blue-600'
                   };
+                  
                   const priorityLabels = {
                     HIGH: '🔥 High Priority',
                     MEDIUM: '⚠️ Medium Priority',
                     LOW: '📌 Low Priority'
                   };
+                  
+                  const isDarkText = task.priority === 'MEDIUM';
                   const bgColor = priorityColors[task.priority] || 'bg-primary';
+                  const textClass = isDarkText ? 'text-slate-900' : 'text-white';
+                  const subtextClass = isDarkText ? 'text-slate-800' : 'text-white/80';
                   
                   return (
                     <div 
-                      className={`${bgColor} text-white p-5 rounded-2xl shadow-sm flex flex-col md:flex-row gap-5 relative overflow-hidden group select-none`}
+                      className={`${bgColor} ${textClass} p-5 rounded-2xl shadow-sm flex flex-col md:flex-row gap-5 relative overflow-hidden group select-none`}
                       style={{ minHeight: '200px' }}
                     >
                       <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:scale-105 transition-transform duration-500"></div>
@@ -260,33 +265,43 @@ const Dashboard = () => {
                       <div className="flex-1 z-10 flex flex-col justify-between">
                         <div>
                           <div className="flex items-center gap-2.5 mb-3 flex-wrap">
-                            <span className="bg-white/20 text-white px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wider backdrop-blur-md border border-white/10">
+                            <span className={`px-2 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wider backdrop-blur-md border ${
+                              isDarkText 
+                                ? 'bg-slate-900/10 border-slate-900/15 text-slate-900' 
+                                : 'bg-white/20 border-white/10 text-white'
+                            }`}>
                               {priorityLabels[task.priority] || '📌 Task'}
                             </span>
-                            <span className="text-white/80 text-2xs font-medium">
+                            <span className={`${subtextClass} text-2xs font-semibold`}>
                               {task.due_date ? `Due ${new Date(task.due_date).toLocaleDateString()}` : 'No deadline'}
                             </span>
                           </div>
 
-                          <h4 className="text-xl font-black mb-2 leading-snug tracking-tight text-white">
+                          <h4 className={`text-xl font-black mb-2 leading-snug tracking-tight ${textClass}`}>
                             {task.title}
                           </h4>
                           
-                          <p className="text-xs opacity-90 leading-relaxed mb-4 max-w-lg line-clamp-3">
+                          <p className={`text-xs leading-relaxed mb-4 max-w-lg line-clamp-3 ${isDarkText ? 'text-slate-850' : 'opacity-90'}`}>
                             {task.description || 'No description provided. Click below to inspect fields and discuss with the team.'}
                           </p>
                         </div>
 
                         <div className="flex items-center gap-4">
                           <div className="flex -space-x-3 select-none">
-                            <div className="w-7 h-7 rounded-full ring-2 ring-white/30 bg-sky-200 text-primary font-bold flex items-center justify-center text-xs">
+                            <div className={`w-7 h-7 rounded-full ring-2 bg-sky-200 text-primary font-bold flex items-center justify-center text-xs ${
+                              isDarkText ? 'ring-slate-900/20' : 'ring-white/30'
+                            }`}>
                               {task.assignee_name?.charAt(0) || 'U'}
                             </div>
                           </div>
                           
                           <button
                             onClick={() => handleOpenFocusTask(task)}
-                            className="bg-white text-gray-800 px-4 py-2 rounded-lg text-xs font-bold shadow-md hover:bg-gray-50 hover:shadow-lg transition-all active:scale-95 cursor-pointer"
+                            className={`px-4 py-2 rounded-lg text-xs font-bold shadow-md transition-all active:scale-95 cursor-pointer ${
+                              isDarkText 
+                                ? 'bg-slate-900 text-white hover:bg-slate-800 hover:shadow-lg' 
+                                : 'bg-white text-gray-800 hover:bg-gray-50 hover:shadow-lg'
+                            }`}
                           >
                             Open Task Details
                           </button>
@@ -294,21 +309,25 @@ const Dashboard = () => {
                       </div>
 
                       {/* Progress Visual */}
-                      <div className="w-full md:w-48 bg-white/10 rounded-xl p-3.5 backdrop-blur-md border border-white/15 z-10 self-center md:self-auto flex flex-col justify-between h-full min-h-[120px] text-left shrink-0">
+                      <div className={`w-full md:w-48 rounded-xl p-3.5 backdrop-blur-md z-10 self-center md:self-auto flex flex-col justify-between h-full min-h-[120px] text-left shrink-0 border ${
+                        isDarkText 
+                          ? 'bg-slate-900/10 border-slate-900/15' 
+                          : 'bg-white/10 border-white/15'
+                      }`}>
                         <div>
-                          <p className="text-[9px] font-extrabold uppercase tracking-widest text-white/80 mb-3">Task Status</p>
+                          <p className={`text-[9px] font-extrabold uppercase tracking-widest mb-3 ${subtextClass}`}>Task Status</p>
                           <div className="flex items-end justify-between mb-1.5">
-                            <span className="text-lg font-bold leading-none">
+                            <span className={`text-lg font-bold leading-none ${textClass}`}>
                               {task.status === 'TODO' ? '0%' : task.status === 'IN_PROGRESS' ? '50%' : '100%'}
                             </span>
-                            <span className="text-[10px] opacity-85 leading-none font-bold uppercase tracking-wider">
+                            <span className={`text-[10px] leading-none font-bold uppercase tracking-wider ${subtextClass}`}>
                               {task.status === 'TODO' ? 'Not Started' : task.status === 'IN_PROGRESS' ? 'In Progress' : 'Completed'}
                             </span>
                           </div>
                         </div>
-                        <div className="w-full h-1 bg-white/20 rounded-full">
+                        <div className={`w-full h-1 rounded-full ${isDarkText ? 'bg-slate-900/20' : 'bg-white/20'}`}>
                           <div
-                            className="h-full bg-white rounded-full transition-all duration-500"
+                            className={`h-full rounded-full transition-all duration-500 ${isDarkText ? 'bg-slate-900' : 'bg-white'}`}
                             style={{
                               width: task.status === 'TODO' ? '0%' : task.status === 'IN_PROGRESS' ? '50%' : '100%'
                             }}
