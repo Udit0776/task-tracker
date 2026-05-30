@@ -46,3 +46,7 @@ coverage
 *.sw?
 .DS_Store
 Thumbs.db
+
+# Private documentation guides
+deployment_guide.md
+
